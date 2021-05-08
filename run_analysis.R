@@ -12,16 +12,14 @@ if (!file.exists("UCI HAR Dataset")) {
   unzip(filename) 
 }
 
-
-# assign names to the data tables
-activities_lables <- read.table("./UCI HAR Dataset/activity_labels.txt", col.names = c("code", "activity"))
-subject_test <- read.table("./UCI HAR Dataset/test/subject_test.txt", col.names = "subject")
-x_test <- read.table("./UCI HAR Dataset/test/X_test.txt", col.names = features$functions)
-y_test <- read.table("./UCI HAR Dataset/test/y_test.txt", col.names = "code")
-subject_train <- read.table("./UCI HAR Dataset/train/subject_train.txt", col.names = "subject")
-x_train <- read.table("./UCI HAR Dataset/train/X_train.txt", col.names = features$functions)
-y_train <- read.table("./UCI HAR Dataset/train/y_train.txt", col.names = "code")
-
+features <- read.table("UCI HAR Dataset/features.txt", col.names = c("n","functions"))
+activities <- read.table("UCI HAR Dataset/activity_labels.txt", col.names = c("code", "activity"))
+subject_test <- read.table("UCI HAR Dataset/test/subject_test.txt", col.names = "subject")
+x_test <- read.table("UCI HAR Dataset/test/X_test.txt", col.names = features$functions)
+y_test <- read.table("UCI HAR Dataset/test/y_test.txt", col.names = "code")
+subject_train <- read.table("UCI HAR Dataset/train/subject_train.txt", col.names = "subject")
+x_train <- read.table("UCI HAR Dataset/train/X_train.txt", col.names = features$functions)
+y_train <- read.table("UCI HAR Dataset/train/y_train.txt", col.names = "code")
 
 #1 Merge the training and test data sets into one data set
 X <- rbind(x_train, x_test)
@@ -54,7 +52,9 @@ names(TidyData)<-gsub("angle", "Angle", names(TidyData))
 names(TidyData)<-gsub("gravity", "Gravity", names(TidyData))
 
 
-#5 Assign descriptive labels to the variable names
+#5 From the data set in step 4, creates a second, independent tidy data set with the 
+#average of each variable for each activity and each subject.
+
 AverageData <- TidyData %>%
   group_by(subject, activity) %>%
   summarise_all(funs(mean))
